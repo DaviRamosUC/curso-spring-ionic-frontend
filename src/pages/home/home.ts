@@ -19,25 +19,25 @@ export class HomePage {
     public navCtrl: NavController,
     public menu: MenuController,
     public auth: AuthService
-    ) {
+  ) {
 
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.menu.swipeEnable(false);
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.menu.swipeEnable(true);
   }
 
-  ionViewDidEnter(){
+  ionViewDidEnter() {
     this.auth.refreshToken()
       .subscribe(response => {
         this.auth.sucessfullyLogin(response.headers.get('Authorization'));
         this.navCtrl.setRoot('CategoriasPage');
       },
-      error => {});
+        error => { });
   }
 
   login() {
@@ -46,8 +46,13 @@ export class HomePage {
         this.auth.sucessfullyLogin(response.headers.get('Authorization'));
         this.navCtrl.setRoot('CategoriasPage');
       },
-      error => {});
-    
+        error => { });
+
+  }
+  
+  signup() {
+    this.navCtrl.push('SignupPage')
+
   }
 
 }
