@@ -29,6 +29,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                         this.handle401();
                         break;
 
+                    case 422:
+                        this.handle422(errorObj);
+                        break;
+
                     case 403:
                         this.handle403();
                         break;
@@ -41,6 +45,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 return Observable.throw(errorObj);
             }) as any;
     }
+    
     handleDefaultError(errorObj) {
         let alert = this.alertController.create({
             title: 'Erro ' + errorObj.status + ': ' + errorObj.error,
@@ -68,6 +73,25 @@ export class ErrorInterceptor implements HttpInterceptor {
         this.storage.setLocalUser(null);
     }
 
+    handle422(errorObj: any) {
+        let alert = this.alertController.create({
+            title: 'Erro 422: Validação',
+            message: this.listErrors(errorObj.errors),
+            enableBackdropDismiss: false,
+            buttons: [
+                { text: 'Ok' }
+            ]
+        });
+        alert.present();
+    }
+
+    listErrors(messages: any): string {
+       let s : string = '';
+       for (var i=0; i<messages.length; i++) {
+           s = s + '<p><strong>' + messages[i].fieldName + '</strong>' + messages[i].message + '</p>';
+       }
+       return s;
+    }
 
 
 }
