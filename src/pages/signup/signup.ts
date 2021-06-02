@@ -2,10 +2,10 @@ import { EstadoDTO } from './../../models/estado.dto';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CidadeService } from '../../services/cidade.service';
-import { EstadoService } from '../../services/estado.service';
+import { CidadeService } from '../../services/domain/cidade.service';
+import { EstadoService } from '../../services/domain/estado.service';
 import { CidadeDTO } from '../../models/cidade.dto';
-import { ClienteService } from '../../services/cliente.service';
+import { ClienteService } from '../../services/domain/cliente.service';
 import { AlertController } from 'ionic-angular';
 
 @IonicPage()

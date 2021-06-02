@@ -1,5 +1,6 @@
+import { CartService } from './../services/domain/cart.service';
 import { AuthInterceptorProvider } from './../interceptors/auth-interceptor';
-import { ClienteService } from './../services/cliente.service';
+import { ClienteService } from '../services/domain/cliente.service';
 import { AuthService } from './../services/auth.service';
 import { ErrorInterceptorProvider } from './../interceptors/error-interceptor';
 import { CategoriaService } from './../services/domain/categoria.service';
@@ -13,7 +14,7 @@ import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StorageService } from '../services/storage.service';
-import { ProdutoService } from '../services/produto.service';
+import { ProdutoService } from '../services/domain/produto.service';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ProdutoService } from '../services/produto.service';
     ClienteService,
     StorageService,
     ProdutoService,
+    CartService,
   ]
 })
 export class AppModule {}

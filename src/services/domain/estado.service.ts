@@ -1,8 +1,8 @@
-import { EstadoDTO } from './../models/estado.dto';
+import { EstadoDTO } from '../../models/estado.dto';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs/Rx';
-import { API_CONFIG } from '../config/api.config';
+import { API_CONFIG } from '../../config/api.config';
 
 @Injectable()
 export class EstadoService {
