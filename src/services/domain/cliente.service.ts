@@ -1,7 +1,7 @@
 import { StorageService } from '../storage.service';
 import { API_CONFIG } from '../../config/api.config';
 import { Observable } from 'rxjs/Rx';
-import { clienteDTO } from '../../models/cliente.dto';
+import { ClienteDTO } from '../../models/cliente.dto';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -13,7 +13,7 @@ export class ClienteService {
         public storage: StorageService) {
     }
 
-    insert(obj: clienteDTO){
+    insert(obj: ClienteDTO) {
         return this.http.post(
             `${API_CONFIG.baseUrl}/clientes`,
             obj,
@@ -24,9 +24,8 @@ export class ClienteService {
         )
     }
 
-    findByEmail(email: string): Observable<clienteDTO> {
-
-        return this.http.get<clienteDTO>(`${API_CONFIG.baseUrl}/clientes/email?value=${email}`,)
+    findByEmail(email: string) {
+        return this.http.get(`${API_CONFIG.baseUrl}/clientes/email?value=${email}`,)
     }
 
     getImageFromBucket(id: string): Observable<any> {

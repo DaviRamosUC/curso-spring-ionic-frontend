@@ -1,6 +1,6 @@
 import { API_CONFIG } from './../../config/api.config';
 import { ClienteService } from '../../services/domain/cliente.service';
-import { clienteDTO } from './../../models/cliente.dto';
+import { ClienteDTO } from './../../models/cliente.dto';
 import { StorageService } from './../../services/storage.service';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -19,7 +19,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ProfilePage {
 
-  cliente: clienteDTO;
+  cliente: ClienteDTO;
 
   constructor(
     public navCtrl: NavController,
@@ -33,7 +33,7 @@ export class ProfilePage {
     if (localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email)
         .subscribe(response => {
-          this.cliente = response;
+          this.cliente = response as ClienteDTO;
           this.getImageIfExists();
         }, error => {
           if (error.status == 403) {
