@@ -33,8 +33,10 @@ export class CategoriasPage {
       .subscribe(response => {
         this.items=response;
       },error => {});
+  }
 
-
+  showProdutos(){
+    this.navCtrl.push('ProdutosPage');
   }
 
 }
