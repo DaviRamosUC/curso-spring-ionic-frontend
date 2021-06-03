@@ -4,13 +4,15 @@ import { Observable } from 'rxjs/Rx';
 import { ClienteDTO } from '../../models/cliente.dto';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ImageUtilService } from '../imageUtil.service';
 
 @Injectable()
 export class ClienteService {
 
     constructor(
         public http: HttpClient,
-        public storage: StorageService) {
+        public storage: StorageService,
+        public imageUtilService: ImageUtilService) {
     }
 
     insert(obj: ClienteDTO) {
@@ -35,5 +37,22 @@ export class ClienteService {
     getImageFromBucket(id: string): Observable<any> {
         let url = `${API_CONFIG.bucketBaseUrl}/cp${id}.jpg`
         return this.http.get(url, { responseType: 'blob' });
+    }
+
+    uploadPicture(picture) {
+        let pictureBlob = this.imageUtilService.dataUriToBlob(picture);
+        let formData: FormData = new FormData();
+        formData.set("file", pictureBlob, 'file.png');
+
+        return this.http.post(
+            `${API_CONFIG.baseUrl}/clientes/picture`,
+            formData,
+            {
+                observe: 'response',
+                responseType: 'text'
+            }
+        )
+
+
     }
 }
