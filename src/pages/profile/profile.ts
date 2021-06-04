@@ -50,7 +50,7 @@ export class ProfilePage {
     this.clienteService.getImageFromBucket(this.cliente.id)
       .subscribe(response => {
         this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
-      }, error => { });
+      }, error => {});
   }
 
   options: CameraOptions = {
@@ -60,6 +60,26 @@ export class ProfilePage {
     mediaType: this.camera.MediaType.PICTURE
   }
 
+  getGalleryPicture() {
+    this.cameraOn=true;
+    
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+     this.picture = 'data:image/png;base64,' + imageData;
+     this.cameraOn = false;
+    }, (err) => {
+      // Handle error
+    });
+  }
   getCameraPicture() {
     this.cameraOn=true;
     this.camera.getPicture(this.options).then((imageData) => {
@@ -77,7 +97,7 @@ export class ProfilePage {
     .subscribe(response =>{
       this.picture= null;
       this.loadData();
-    },error => { })
+    },error => {})
   }
 
   cancel(){
