@@ -5,6 +5,7 @@ import { StorageService } from './../../services/storage.service';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @IonicPage()
 @Component({
@@ -16,20 +17,24 @@ export class ProfilePage {
   cliente: ClienteDTO;
   picture: string;
   cameraOn: boolean = false;
+  profileImage;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public storage: StorageService,
     public clienteService: ClienteService,
-    public camera: Camera) {
+    public camera: Camera,
+    public sanitizer: DomSanitizer,) {
+      
+    this.profileImage = 'assets/imgs/avatar-blank.png'
   }
 
   ionViewDidLoad() {
     this.loadData();
   }
 
-  loadData(){
+  loadData() {
     let localUser = this.storage.getLocalUser()
     if (localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email)
@@ -50,7 +55,22 @@ export class ProfilePage {
     this.clienteService.getImageFromBucket(this.cliente.id)
       .subscribe(response => {
         this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
-      }, error => {});
+        this.blobToDataURL(response).then(dataUrl => {
+          let str: string = dataUrl as string;
+          this.profileImage = this.sanitizer.bypassSecurityTrustUrl(str);
+        })
+      }, error => {
+        this.profileImage = 'assets/imgs/avatar-blank.png'
+      });
+  }
+
+  blobToDataURL(blob) {
+    return new Promise((fulfill, reject) => {
+      let reader = new FileReader();
+      reader.onload = reject;
+      reader.onload = (e) => fulfill(reader.result);
+      reader.readAsDataURL(blob);
+    })
   }
 
   options: CameraOptions = {
@@ -61,8 +81,8 @@ export class ProfilePage {
   }
 
   getGalleryPicture() {
-    this.cameraOn=true;
-    
+    this.cameraOn = true;
+
     const options: CameraOptions = {
       quality: 100,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
@@ -74,33 +94,33 @@ export class ProfilePage {
     this.camera.getPicture(options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64 (DATA_URL):
-     this.picture = 'data:image/png;base64,' + imageData;
-     this.cameraOn = false;
+      this.picture = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
     }, (err) => {
-      this.cameraOn= false;
+      this.cameraOn = false;
     });
   }
   getCameraPicture() {
-    this.cameraOn=true;
+    this.cameraOn = true;
     this.camera.getPicture(this.options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64 (DATA_URL):
-     this.picture = 'data:image/png;base64,' + imageData;
-     this.cameraOn = false;
+      this.picture = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
     }, (err) => {
-      this.cameraOn= false;
+      this.cameraOn = false;
     });
   }
 
-  sendPicture(){
+  sendPicture() {
     this.clienteService.uploadPicture(this.picture)
-    .subscribe(response =>{
-      this.picture= null;
-      this.loadData();
-    },error => {})
+      .subscribe(response => {
+        this.picture = null;
+        this.getImageIfExists();
+      }, error => { })
   }
 
-  cancel(){
+  cancel() {
     this.picture = null;
   }
 
